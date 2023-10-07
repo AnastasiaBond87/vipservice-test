@@ -1,14 +1,13 @@
-import { FormHelperText, InputBase, InputLabel, Stack, styled } from '@mui/material';
+import { InputBase, InputLabel, InputProps, Stack, styled } from '@mui/material';
+import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
+import ErrorTooltip from '../ErrorTooltip';
 
-interface Props {
-  error?: string;
-  placeholder: string;
-  id: string;
-  label: string;
-}
+type Props<T extends FieldValues> = UseControllerProps<T> & InputProps & { label: string };
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
   '&.MuiInputBase-root': {
+    maxWidth: '200px',
+    width: '100%',
     '& .MuiInputBase-input': {
       backgroundColor: theme.palette.background.paper,
       fontSize: '14px',
@@ -26,14 +25,32 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function BaseInput({ error, placeholder, id, label }: Props) {
+export default function BaseInput<T extends FieldValues>(props: Props<T>) {
+  const {
+    field: { value, onBlur, onChange },
+    fieldState: { error },
+  } = useController<T>(props);
+
+  const { id, type, placeholder, label, name } = props;
+
   return (
-    <Stack>
-      <InputLabel htmlFor={id} sx={{ fontSize: '11px', color: 'primary.contrastText' }}>
-        {label}
-      </InputLabel>
-      <StyledInput placeholder={placeholder} id={id} />
-      {error && <FormHelperText error>{error}</FormHelperText>}
-    </Stack>
+    <ErrorTooltip isOpen={!!error} title={error?.message}>
+      <Stack>
+        <InputLabel htmlFor={id} sx={{ fontSize: '11px', color: 'primary.contrastText' }}>
+          {label}
+        </InputLabel>
+
+        <StyledInput
+          placeholder={placeholder}
+          id={id}
+          type={type ?? 'text'}
+          onChange={onChange}
+          onBlur={onBlur}
+          value={value}
+          name={name}
+          autoComplete="off"
+        />
+      </Stack>
+    </ErrorTooltip>
   );
 }
