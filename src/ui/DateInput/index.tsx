@@ -2,15 +2,13 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CalendarIcon from '@/assets/icons/calendar-icon.svg?react';
-import { FormLabel, Stack, Tooltip, styled } from '@mui/material';
+import { FormLabel, InputProps, Stack, styled } from '@mui/material';
 import { ruRU } from '@mui/x-date-pickers/locales';
 import 'dayjs/locale/ru';
+import ErrorTooltip from '../ErrorTooltip';
+import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
 
-interface Props {
-  label: string;
-  id: string;
-  error?: string;
-}
+type Props<T extends FieldValues> = UseControllerProps<T> & InputProps & { label: string };
 
 const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
   '&.MuiTextField-root': {
@@ -40,24 +38,24 @@ const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
   },
 }));
 
-export default function DateInput({ label, id, error }: Props) {
+export default function DateInput<T extends FieldValues>(props: Props<T>) {
+  const {
+    field: { value, onBlur, onChange },
+    fieldState: { error },
+  } = useController<T>(props);
+
+  const { name, id, label } = props;
+
   return (
-    <Tooltip
-      title={error}
-      open={!!error}
-      arrow
-      placement="bottom-end"
-      componentsProps={{
-        tooltip: { sx: { bgcolor: 'error.main' } },
-        arrow: { sx: { color: 'error.main' } },
-      }}
-    >
+    <ErrorTooltip title={error?.message} isOpen={!!error}>
       <Stack>
         <FormLabel htmlFor={id} sx={{ fontSize: '11px', color: 'primary.contrastText' }}>
           {label}
         </FormLabel>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StyledDatePicker
+            value={value}
+            onChange={onChange}
             format="DD.MM.YY"
             localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}
             slots={{
@@ -77,12 +75,14 @@ export default function DateInput({ label, id, error }: Props) {
                 InputProps: {
                   id,
                   spellCheck: false,
+                  onBlur,
+                  name,
                 },
               },
             }}
           />
         </LocalizationProvider>
       </Stack>
-    </Tooltip>
+    </ErrorTooltip>
   );
 }
