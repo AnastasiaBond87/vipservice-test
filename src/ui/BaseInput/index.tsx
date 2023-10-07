@@ -1,8 +1,12 @@
 import { InputBase, InputLabel, InputProps, Stack, styled } from '@mui/material';
 import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
-import ErrorTooltip from '../ErrorTooltip';
+import ErrorTooltip from '@/ui/ErrorTooltip';
+import { useEffect } from 'react';
 
-type Props<T extends FieldValues> = UseControllerProps<T> & InputProps & { label: string };
+interface Props {
+  label: string;
+  storeValue: (value: string) => void;
+}
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
   '&.MuiInputBase-root': {
@@ -25,13 +29,21 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function BaseInput<T extends FieldValues>(props: Props<T>) {
+export default function BaseInput<T extends FieldValues>(
+  props: Props & UseControllerProps<T> & InputProps
+) {
   const {
     field: { value, onBlur, onChange },
     fieldState: { error },
   } = useController<T>(props);
 
-  const { id, type, placeholder, label, name } = props;
+  const { id, type, placeholder, label, name, storeValue } = props;
+
+  useEffect(() => {
+    return () => {
+      storeValue(value);
+    };
+  }, [value, storeValue]);
 
   return (
     <ErrorTooltip isOpen={!!error} title={error?.message}>
