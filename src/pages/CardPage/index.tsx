@@ -1,10 +1,14 @@
 import FlightCard from '@/components/Card';
-import { Box } from '@mui/material';
+import { Link, Stack, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function CardPage() {
   return (
-    <Box sx={{ mt: '71px' }}>
+    <Stack sx={{ mt: '71px', gap: '30px' }}>
       <FlightCard />
-    </Box>
+      <Link component={RouterLink} to="/avia" sx={{ alignSelf: 'center', textDecoration: 'none' }}>
+        <Typography sx={{ fontWeight: '700', fontSize: '24px' }}>Вернуться на главную</Typography>
+      </Link>
+    </Stack>
   );
 }

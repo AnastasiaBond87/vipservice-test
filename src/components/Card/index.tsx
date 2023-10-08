@@ -4,7 +4,13 @@ import CardFlightInfo from './components/CardFlightInfo';
 import { useAppSelector } from '@/app/store/hooks';
 
 export default function FlightCard() {
-  const { arrivalDate } = useAppSelector((store) => store.searchForm);
+  const { arrivalDate, arrival, departure, departureDate } = useAppSelector(
+    (store) => store.searchForm
+  );
+
+  if (!arrival || !departure || !departureDate) {
+    return null;
+  }
 
   return (
     <Box
