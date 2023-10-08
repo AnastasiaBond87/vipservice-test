@@ -40,9 +40,7 @@ export default function BaseInput<T extends FieldValues>(
   const { id, type, placeholder, label, name, storeValue } = props;
 
   useEffect(() => {
-    return () => {
-      storeValue(value);
-    };
+    storeValue(value);
   }, [value, storeValue]);
 
   return (
