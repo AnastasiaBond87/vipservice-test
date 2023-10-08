@@ -5,11 +5,12 @@ const theme = createTheme({
     primary: {
       main: '#5c87db',
       dark: '#3e67b7',
-      light: '#5c87db',
+      light: '#8ba5d8',
     },
     secondary: {
       main: '#b7bac1',
       light: '#e0e1e3',
+      dark: '#232323',
     },
     action: {
       disabledBackground: '#b7bac1',
