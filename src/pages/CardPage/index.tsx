@@ -1,3 +1,10 @@
+import FlightCard from '@/components/Card';
+import { Box } from '@mui/material';
+
 export default function CardPage() {
-  return <h2>card page</h2>;
+  return (
+    <Box sx={{ mt: '71px' }}>
+      <FlightCard />
+    </Box>
+  );
 }
