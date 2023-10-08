@@ -1,3 +1,10 @@
+import SearchForm from '@/components/SearchForm';
+import { Box } from '@mui/material';
+
 export default function SearchPage() {
-  return <h2>search page</h2>;
+  return (
+    <Box sx={{ mt: '68px' }}>
+      <SearchForm />
+    </Box>
+  );
 }
