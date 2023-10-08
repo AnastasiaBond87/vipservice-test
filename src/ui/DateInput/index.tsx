@@ -8,11 +8,10 @@ import 'dayjs/locale/ru';
 import ErrorTooltip from '@/ui/ErrorTooltip';
 import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
 import { useEffect } from 'react';
-import dayjs from 'dayjs';
 
 interface Props {
   label: string;
-  storeValue: (value: string | null) => void;
+  storeValue: (value: Date) => void;
 }
 
 const StyledDatePicker = styled(DatePicker)(({ theme }) => ({
@@ -55,9 +54,7 @@ export default function DateInput<T extends FieldValues>(
   const { name, id, label, storeValue } = props;
 
   useEffect(() => {
-    if (value) {
-      storeValue(value.toString());
-    }
+    storeValue(value);
   }, [value, storeValue]);
 
   return (
@@ -69,7 +66,7 @@ export default function DateInput<T extends FieldValues>(
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StyledDatePicker
             disablePast
-            value={value ? dayjs(value) : null}
+            value={value}
             onChange={onChange}
             format="DD.MM.YY"
             localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}

@@ -9,7 +9,13 @@ const reducer = combineReducers({
 
 const store = configureStore({
   reducer,
-  devTools: true,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['searchForm/setArrivalDate', 'searchForm/setDepartureDate'],
+        ignoredPaths: ['searchForm.departureDate', 'searchForm.arrivalDate'],
+      },
+    }),
 });
 
 export type AppState = ReturnType<typeof store.getState>;

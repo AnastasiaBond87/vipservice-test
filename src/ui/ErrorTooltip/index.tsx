@@ -15,7 +15,7 @@ export default function ErrorTooltip({ title, isOpen, children }: Props) {
       arrow
       placement="bottom-end"
       componentsProps={{
-        tooltip: { sx: { bgcolor: 'error.main' } },
+        tooltip: { sx: { bgcolor: 'error.main', maxWidth: '150px' } },
         arrow: { sx: { color: 'error.main' } },
       }}
     >

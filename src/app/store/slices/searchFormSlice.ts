@@ -3,8 +3,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 interface State {
   departure: string;
   arrival: string;
-  departureDate: null | string;
-  arrivalDate: null | string;
+  departureDate: Date | null;
+  arrivalDate: Date | null;
 }
 
 const initialState: State = {
@@ -24,10 +24,10 @@ const searchFormSlice = createSlice({
     setArrival(state, action: PayloadAction<string>) {
       state.arrival = action.payload;
     },
-    setDepartureDate(state, action: PayloadAction<string | null>) {
+    setDepartureDate(state, action: PayloadAction<Date>) {
       state.departureDate = action.payload;
     },
-    setArrivalDate(state, action: PayloadAction<string | null>) {
+    setArrivalDate(state, action: PayloadAction<Date>) {
       state.arrivalDate = action.payload;
     },
   },

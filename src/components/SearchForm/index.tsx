@@ -14,12 +14,13 @@ import {
 } from '@/app/store/slices/searchFormSlice';
 import { useNavigate } from 'react-router-dom';
 import { FormEvent } from 'react';
+import dayjs from 'dayjs';
 
 interface FormValues {
   departure: string;
   arrival: string;
-  departureDate: null | string;
-  arrivalDate?: null | string;
+  departureDate: Date | null;
+  arrivalDate?: Date | null;
 }
 
 export default function SearchForm() {
@@ -33,8 +34,16 @@ export default function SearchForm() {
   const schema: yup.ObjectSchema<FormValues> = yup.object().shape({
     departure: yup.string().required('Обязательное поле'),
     arrival: yup.string().required('Обязательное поле'),
-    departureDate: yup.string().required('Обязательное поле'),
-    arrivalDate: yup.string().nullable(),
+    departureDate: yup
+      .date()
+      .typeError('Неверный формат даты')
+      .required('Обязательное поле')
+      .min(dayjs().startOf('day'), 'Дата не может быть меньше текущей'),
+    arrivalDate: yup
+      .date()
+      .typeError('Неверный формат даты')
+      .notRequired()
+      .min(yup.ref('departureDate'), 'Дата прилета не может быть меньше даты вылета'),
   });
 
   const defaultValues: FormValues = {
@@ -84,7 +93,7 @@ export default function SearchForm() {
       >
         <BaseInput
           placeholder="Город вылета"
-          label="Откуда"
+          label="Откуда*"
           id="departure"
           name="departure"
           control={control}
@@ -94,7 +103,7 @@ export default function SearchForm() {
         />
         <BaseInput
           placeholder="Город прилета"
-          label="Куда"
+          label="Куда*"
           id="arrival"
           name="arrival"
           control={control}
@@ -103,11 +112,11 @@ export default function SearchForm() {
           }}
         />
         <DateInput
-          label="Туда"
+          label="Туда*"
           id="departure-date"
           name="departureDate"
           control={control}
-          storeValue={(value: string | null) => {
+          storeValue={(value: Date) => {
             dispatch(setDepartureDate(value));
           }}
         />
@@ -116,7 +125,7 @@ export default function SearchForm() {
           id="arrival-date"
           name="arrivalDate"
           control={control}
-          storeValue={(value: string | null) => {
+          storeValue={(value: Date) => {
             dispatch(setArrivalDate(value));
           }}
         />
